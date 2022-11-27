@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+    .cell-color {
+        height: 1px;
+    }
+</style>
+<div class="container" id="app2">
+
+    <table class="table">
+        <tr>
+            <th> Name</th>
+            <th v-for="header of resources.headers">
+                {{header}}
+            </th>
+        </tr>
+
+        <tr v-for="row of resources.rows">
+            <td>{{row.individualName}}</td>
+            <td v-for="coll of row.colls">
+                <div :style="{'background-color': dateTimeColor.color}" class="cell-color" v-for="dateTimeColor  of coll.dateTimeColors"></div>
+
+            </td>
+        </tr>
+    </table>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+<script>
+
+    let app = new Vue({
+        el: '#app2',
+      data: {
+          resources:[]
+         },
+         mounted: function () {
+            this.GetAll();
+        },
+        computed: {},
+        methods: {
+       GetAll: function () {
+            var self =  this;
+            $.ajax({
+                type: 'GET',
+                url: "/Home/GetAll",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                   self.resources =  response;
+
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }// methods end
+        }
+    })
+</script>
